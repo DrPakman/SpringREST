@@ -11,6 +11,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -18,19 +23,34 @@ public class WebSecurityConfig {
     private final SuccessUserHandler successUserHandler;
     private final UserDetailsServiceImpl userDetailsServiceImpl;
 
-    public WebSecurityConfig(SuccessUserHandler successUserHandler, UserDetailsService userDetailsService, UserDetailsServiceImpl userDetailsService1, UserDetailsServiceImpl userDetailsServiceImpl) {
+    public WebSecurityConfig(SuccessUserHandler successUserHandler, UserDetailsService userDetailsService, UserDetailsServiceImpl userDetailsServiceImpl) {
         this.successUserHandler = successUserHandler;
         this.userDetailsServiceImpl = userDetailsServiceImpl;
+    }
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(Arrays.asList("http://127.0.0.1:5500")); // Указываем разрешенные домены
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+        config.setAllowedHeaders(Arrays.asList("*"));
+        config.setAllowCredentials(true); // Если используется аутентификация
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config); // Применяем к всем маршрутам
+
+// Применяем конфигурацию к вашему API
+        return source; // Возвращаем конфигурацию CORS
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Добавляем CORS конфигурацию
                 .authorizeHttpRequests(auth -> auth
                     .requestMatchers("/auth/login").permitAll()
                     .requestMatchers("/admin/**").hasRole("ADMIN")
                     .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
-                    .anyRequest().authenticated()
+                        .anyRequest().authenticated()
             )
             .formLogin(form-> form
                     .loginPage("/auth/login")
@@ -39,7 +59,7 @@ public class WebSecurityConfig {
                     .failureUrl("/auth/login?error")
             )
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/logout") // Отключить CSRF для логаута
+                        .ignoringRequestMatchers("/logout","/api/**")
                 )
                 .logout(logout-> logout
                     .logoutUrl("/logout")
@@ -62,4 +82,6 @@ public class WebSecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return NoOpPasswordEncoder.getInstance();
     }
+    // Настройка источника конфигурации CORS
+
 }

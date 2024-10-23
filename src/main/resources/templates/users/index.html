@@ -84,32 +84,32 @@
                     <div class="card">
                         <div class="card-header h6">Add new user</div>
                         <div class="card-body">
-                                    <form th:method="POST" th:action="@{/admin/new}" th:object="${user}" >
+                                    <form id="createUserForm">
                                       <div class="row justify-content-center">
                                           <div class="col-md-4">
                                         <div class="mb-3 text-center">
-                                            <label for="username">First Name</label>
-                                            <input type="text" id="username" th:field="*{username}" class="form-control">
+                                            <label for="createUsername">First Name</label>
+                                            <input type="text" id="createUsername" name="username" class="form-control">
                                         </div>
                                         <div class="mb-3 text-center">
-                                            <label for="lastname">Last Name</label>
-                                            <input type="text" id="lastname" th:field="*{lastname}" class="form-control">
+                                            <label for="createLastname">Last Name</label>
+                                            <input type="text" id="createLastname" name="lastname" class="form-control">
                                         </div>
                                         <div class="mb-3 text-center">
-                                            <label for="age">Age</label>
-                                            <input type="number" th:field="*{age}" class="form-control">
+                                            <label for="createAge">Age</label>
+                                            <input type="number" id="createAge" name="age" class="form-control">
                                         </div>
                                         <div class="mb-3 text-center">
-                                            <label for="email">Email</label>
-                                            <input type="email" th:field="*{email}" class="form-control">
+                                            <label for="createEmail">Email</label>
+                                            <input type="email" id="createEmail" name="email" class="form-control">
                                         </div>
                                         <div class="mb-3 text-center">
-                                            <label for="password">Password</label>
-                                            <input type="password" th:field="*{password}" class="form-control">
+                                            <label for="createPassword">Password</label>
+                                            <input type="password" id="createPassword" name="password" class="form-control">
                                         </div>
                                         <div class="mb-3 text-center">
-                                            <label for="roles" class="form-label">Role</label>
-                                            <select name="roleNames" class="form-select" multiple style="max-height: 50px;">
+                                            <label for="createRoles" class="form-label">Role</label>
+                                            <select name="roleNames" id="createRoles" class="form-select" multiple style="max-height: 50px;">
                                                 <option value="ROLE_ADMIN">ADMIN</option>
                                                 <option value="ROLE_USER">USER</option>
                                             </select>
@@ -175,8 +175,8 @@
                       <input type="text" class="form-control w-50 mx-auto" name="id" disabled th:value="${user.id}">
                   </div>
                   <div class="mb-3 text-center">
-                      <label for="Firstname" class="col-form-label">First Name</label>
-                      <input type="text" name=username class="form-control w-50 mx-auto" id="Firstname" th:value="${user.username}">
+                      <label for="EditFirstname" class="col-form-label">First Name</label>
+                      <input type="text" name=username class="form-control w-50 mx-auto" id="EditFirstname" th:value="${user.username}">
                   </div>
                   <div class="mb-3 text-center">
                       <label for="editLastName" class="col-form-label">Last Name</label>
@@ -184,19 +184,19 @@
                   </div>
                   <div class="mb-3 text-center">
                       <label for="editAge" class="col-form-label">ID</label>
-                      <input type="number" name="age" class="form-control w-50 mx-auto" id="age"  th:value="${user.age}">
+                      <input type="number" name="age" class="form-control w-50 mx-auto" id="editAge"  th:value="${user.age}">
                   </div>
                   <div class="mb-3 text-center">
                       <label for="editEmail" class="col-form-label">Email</label>
-                      <input type="email" name="email" class="form-control w-50 mx-auto" id="email"  th:value="${user.email}">
+                      <input type="email" name="email" class="form-control w-50 mx-auto" id="editEmail"  th:value="${user.email}">
                   </div>
                   <div class="mb-3 text-center">
                       <label for="editPassword" class="col-form-label">Password</label>
-                      <input type="password" name="password" class="form-control w-50 mx-auto" id="password"  th:value="${user.id}">
+                      <input type="password" name="password" class="form-control w-50 mx-auto" id="editPassword"  th:value="${user.id}">
                   </div>
                   <div class="mb-3 text-center">
-                      <label for="roles" class="form-label">Role</label>
-                      <select id="roles" name="roleNames" multiple class="form-select w-50 mx-auto" style="max-height: 50px">
+                      <label for="editRoles" class="form-label">Role</label>
+                      <select id="editRoles" name="roleNames" multiple class="form-select w-50 mx-auto" style="max-height: 50px">
                           <option value="ROLE_USER">User</option>
                           <option value="ROLE_ADMIN">Admin</option>
                       </select>
@@ -221,31 +221,30 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form th:action="@{/admin/{id}/delete(id=${user.id})}" th:method="POST">
-                    <input type="hidden" name="_method" value="DELETE"/>
+                <form id="deleteUserForm-${user.id}" th:data-user-id="${user.id}">
                     <div class="mb-3 text-center">
-                        <label for="id" class="col-form-label">ID</label>
-                        <input type="text" class="form-control w-50 mx-auto" id="id" disabled th:value="${user.id}">
+                        <label for="deleteId" class="col-form-label">ID</label>
+                        <input type="text" class="form-control w-50 mx-auto" id="deleteId" disabled th:value="${user.id}">
                     </div>
                     <div class="mb-3 text-center">
-                        <label for="editFn" class="col-form-label">First Name</label>
-                        <input type="text" class="form-control w-50 mx-auto" id="editFn" disabled th:value="${user.username}">
+                        <label for="deleteFirstname" class="col-form-label">First Name</label>
+                        <input type="text" class="form-control w-50 mx-auto" id="deleteFirstname" disabled th:value="${user.username}">
                     </div>
                     <div class="mb-3 text-center">
-                        <label for="editLn" class="col-form-label">Last Name</label>
-                        <input type="text" class="form-control w-50 mx-auto" id="editLn" disabled  th:value="${user.lastname}">
+                        <label for="deleteLastname" class="col-form-label">Last Name</label>
+                        <input type="text" class="form-control w-50 mx-auto" id="deleteLastname" disabled  th:value="${user.lastname}">
                     </div>
                     <div class="mb-3 text-center">
-                        <label for="editAge" class="col-form-label">ID</label>
-                        <input type="number" class="form-control w-50 mx-auto" id="editAge"  disabled th:value="${user.age}">
+                        <label for="deleteAge" class="col-form-label">ID</label>
+                        <input type="number" class="form-control w-50 mx-auto" id="deleteAge"  disabled th:value="${user.age}">
                     </div>
                     <div class="mb-3 text-center">
-                        <label for="editEmail" class="col-form-label">Email</label>
-                        <input type="email" class="form-control w-50 mx-auto" id="editEmail"  disabled th:value="${user.email}">
+                        <label for="deleteEmail" class="col-form-label">Email</label>
+                        <input type="email" class="form-control w-50 mx-auto" id="deleteEmail"  disabled th:value="${user.email}">
                     </div>
                     <div class="mb-3 text-center">
-                        <label for="editPassword" class="col-form-label">Password</label>
-                        <input type="password" class="form-control w-50 mx-auto"  id="editPassword" disabled th:value="${user.id}">
+                        <label for="deletePassword" class="col-form-label">Password</label>
+                        <input type="password" class="form-control w-50 mx-auto"  id="deletePassword" disabled th:value="${user.id}">
                     </div>
                     <div class="mb-3 text-center">
                         <label class="form-label">Roles</label>
@@ -265,8 +264,7 @@
     </div>
 </div>
 
-
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="/script.js" defer></script>
 </body>
 </html>

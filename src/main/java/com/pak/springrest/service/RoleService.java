@@ -17,4 +17,7 @@ public class RoleService {
     public List<Role> findRolesByNames(List<String> roleNames) {
         return roleRepository.findByRoleNameIn(roleNames);
     }
+    public void save(Role role) {
+        roleRepository.save(role);
+    }
 }
