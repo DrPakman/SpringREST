@@ -169,21 +169,21 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body ">
-              <form th:method="PATCH" th:action="@{/admin/{id}/edit(id=${user.id})}" th:object="${user}" >
+              <form id="editUserForm-${user.id}" th:data-user-id="${user.id}" >
                   <div class="mb-3 text-center">
-                      <label class="col-form-label">ID</label>
-                      <input type="text" class="form-control w-50 mx-auto" name="id" disabled th:value="${user.id}">
+                      <label for="editId" class="col-form-label">ID</label>
+                      <input type="text" class="form-control w-50 mx-auto" name="id" id="editId" disabled th:value="${user.id}">
                   </div>
                   <div class="mb-3 text-center">
                       <label for="EditFirstname" class="col-form-label">First Name</label>
-                      <input type="text" name=username class="form-control w-50 mx-auto" id="EditFirstname" th:value="${user.username}">
+                      <input type="text" name="username" class="form-control w-50 mx-auto" id="EditFirstname" th:value="${user.username}">
                   </div>
                   <div class="mb-3 text-center">
                       <label for="editLastName" class="col-form-label">Last Name</label>
                       <input type="text" name="lastname" class="form-control w-50 mx-auto" id="editLastName"  th:value="${user.lastname}">
                   </div>
                   <div class="mb-3 text-center">
-                      <label for="editAge" class="col-form-label">ID</label>
+                      <label for="editAge" class="col-form-label">Age</label>
                       <input type="number" name="age" class="form-control w-50 mx-auto" id="editAge"  th:value="${user.age}">
                   </div>
                   <div class="mb-3 text-center">
@@ -213,7 +213,7 @@
 </div>
 
 <!--MODAL DELETE-->
-<div th:each="user : ${users}" class="modal fade" th:id="'deleteModal' + ${user.id}" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+<div th:each="user : ${users}" class="modal fade" th:id="'deleteModal' + ${user.id}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

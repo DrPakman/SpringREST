@@ -5,6 +5,8 @@ import com.pak.springrest.models.User;
 import com.pak.springrest.service.RoleService;
 import com.pak.springrest.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -47,15 +49,34 @@ public class RESTController {
 
         return user;
     }
-    @PutMapping("/users")
-    public User updateUser(@RequestBody User user) {
+    @PutMapping("/users/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
+        // Получаем существующего пользователя по ID
+        User existingUser = userService.getUserById(id);
+
+        // Проверяем, изменена ли почта
+        if (!existingUser.getEmail().equals(user.getEmail())) {
+            // Если почта изменена, проверяем уникальность
+            if (userService.existsByEmail(user.getEmail())) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).build(); // Конфликт: почта уже существует
+            }
+        }
+
+        // Обновляем роли
         List<String> roleNames = user.getRoles().stream()
                 .map(Role::getName)
                 .collect(Collectors.toList());
         List<Role> roles = roleService.findRolesByNames(roleNames);
         user.setRoles(roles);
-        return userService.updateUser(user);
+
+        // Устанавливаем ID существующего пользователя для обновления
+        user.setId(id);
+
+        // Обновляем пользователя
+        User updatedUser = userService.updateUser(user);
+        return ResponseEntity.ok(updatedUser);
     }
+
 
     @DeleteMapping("/users/{id}")
     public String deleteUser(@PathVariable Long id) {
