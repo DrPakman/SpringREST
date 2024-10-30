@@ -127,6 +127,7 @@ function updateUserTable(users) {
         `;
     });
 }
+
 document.querySelectorAll('form[id^="editUserForm"]').forEach(form => {
     form.addEventListener('submit', async function(event) {
         event.preventDefault(); // Отменяем стандартное поведение формы
@@ -139,11 +140,19 @@ document.querySelectorAll('form[id^="editUserForm"]').forEach(form => {
         // Преобразуем FormData в объект
         const user = Object.fromEntries(formData.entries());
 
+        // Получаем оригинальное значение пароля
+        const originalPassword = this.querySelector('input[name="password"]').getAttribute('data-original-password');
+
+        // Проверяем, если поле password пустое или совпадает с оригинальным значением, не добавляем его в user
+        if (!user.password || user.password === originalPassword) {
+            delete user.password; // Удаляем поле password из объекта user, если оно не изменено
+        }
+
         const selectedRoles = Array.from(formData.getAll("roleNames"));
-        user.roles = selectedRoles.map(role => ({ name: role })); // предполагается, что Role имеет поле name
+        user.roles = selectedRoles.map(role => ({ name: role }));
+        // предполагается, что Role имеет поле name
 
         try {
-            const userId = this.getAttribute('data-user-id');
             const response = await fetch(`/api/users/${userId}`, {
                 method: 'PUT',
                 headers: {

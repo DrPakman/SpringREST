@@ -24,7 +24,6 @@ public class AdminController {
         this.roleService = roleService;
     }
 
-
     @GetMapping("")
     public String index(Model model, @AuthenticationPrincipal UserDetails currentUser) {
         List<User> users = userService.getAllUsers();
@@ -39,43 +38,5 @@ public class AdminController {
         model.addAttribute("user", new User());
         return "users/index";
     }
-
-//    @PostMapping("/new")
-//    public String createUser(@ModelAttribute User user, @RequestParam List<String> roleNames) {
-//        List<Role> roles = roleService.findRolesByNames(roleNames);
-//        for (Role role : roles) {
-//            user.getRoles().add(role);
-//        }
-//        userService.saveUser(user);
-//        return "redirect:/admin";
-//    }
-//
-//@PatchMapping("/{id}/edit")
-//public String update(@ModelAttribute User user, @PathVariable Long id, @RequestParam List<String> roleNames) {
-//    User existingUser = userService.getUserById(id);
-//
-//    existingUser.setUsername(user.getUsername());
-//    existingUser.setLastname(user.getLastname());
-//    existingUser.setAge(user.getAge());
-//    existingUser.setEmail(user.getEmail());
-//    existingUser.setPassword(user.getPassword());
-//
-//    List<Role> roles = roleService.findRolesByNames(roleNames);
-//    existingUser.getRoles().clear();
-//    for (Role role : roles) {
-//        existingUser.getRoles().add(role);
-//    }
-//
-//    // Сохраняем обновленного пользователя
-//    userService.updateUser(existingUser);
-//    return "redirect:/admin"; // Перенаправление на страницу администрирования
-//}
-//
-//
-//    @DeleteMapping("/{id}/delete")
-//    public String delete(@PathVariable("id") Long id) {
-//        userService.deleteUser(id);
-//        return "redirect:/admin";
-//    }
 
 }
