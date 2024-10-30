@@ -66,52 +66,9 @@ public class RESTController {
 
     @PutMapping("/users/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
-        // Получаем существующего пользователя по ID
-        User existingUser = userService.getUserById(id);
-        if (existingUser == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Если пользователь не найден
-        }
-
-        // Проверяем, изменен ли email и его уникальность
-        if (user.getEmail() != null && !user.getEmail().equals(existingUser.getEmail()) &&
-                userService.existsByEmail(user.getEmail())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
-
-        // Устанавливаем новые значения для обновления
-        existingUser.setUsername(user.getUsername());
-        existingUser.setLastname(user.getLastname());
-        existingUser.setAge(user.getAge());
-
-// Проверяем и обновляем пароль, если он указан и не совпадает с текущим
-        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
-            // Проверяем, отличается ли новый пароль от текущего пароля
-            if (!passwordEncoder.matches(user.getPassword(), existingUser.getPassword())) {
-                // Если отличается, хешируем новый пароль
-                existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
-            }
-            // Если пароли совпадают, ничего не делаем с паролем
-        } else {
-            // Если пароль не указан, оставляем его без изменений
-            existingUser.setPassword(existingUser.getPassword());
-        }
-
-
-        // Устанавливаем роли, если они указаны
-        if (user.getRoles() != null) {
-            List<String> roleNames = user.getRoles().stream()
-                    .map(Role::getName)
-                    .collect(Collectors.toList());
-            List<Role> roles = roleService.findRolesByNames(roleNames);
-            existingUser.setRoles(roles);
-        }
-
-        // Сохраняем обновленного пользователя
-        User updatedUser = userService.updateUser(existingUser);
-        return ResponseEntity.ok(updatedUser);
+            user.setId(id);
+            return ResponseEntity.ok(userService.updateUser(user));
     }
-
-
     @DeleteMapping("/users/{id}")
     public String deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
